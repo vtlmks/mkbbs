@@ -17,8 +17,9 @@ jA!_/____/// `:::.::::. .  /____/   _/____/    /____/     /____/e^d _/____///
  - command line parser
  - non blocking networking (select?)
 
-
-
+ - configfile(s)
+ - gui for config?
+ - 
 
 
 * - [ miscellaneous -----------------------------------------------------------
