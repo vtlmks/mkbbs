@@ -21,10 +21,31 @@
 #include <stdio.h>
 #include <stdint.h>
 
+typedef uint8_t u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
+
+typedef int8_t s8;
+typedef int16_t s16;
+typedef int32_t s32;
+typedef int64_t s64;
+
+typedef float r32;
+typedef double r64;
+
+typedef u64 bool;
+
+#define true 1
+#define false 0
+
+
 #pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "sqlite3.lib")
 
 #define TELOPTS
 #include "telnet.h"
+#include "sqlite3.h"
 
 enum {
 	TOP_LEVEL,
@@ -65,7 +86,6 @@ static void display_file(char *filename, SOCKET sock) {
 	fseek(f, 0, SEEK_SET);
 	fread(buffer, filesize, 1, f);
 	fclose(f);
-
 	send(sock, buffer, filesize, 0);
 }
 
