@@ -21,5 +21,11 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ansi-texts\AwaitScreen.txt" />
+    <Text Include="todo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="telnet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

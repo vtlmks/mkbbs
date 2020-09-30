@@ -143,6 +143,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ansi-texts\AwaitScreen.txt" />
+    <Text Include="todo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="telnet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
