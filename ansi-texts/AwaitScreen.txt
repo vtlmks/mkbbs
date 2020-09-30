@@ -1,5 +1,4 @@
-[0p
-[33m
+[0p[2J[0;0H[33m
     W e l c o me  t o  t h e  F u t u r e  E n t r a n c e  s y s t e m !
 
        -·» Future Entrance is operated by ViTAL/MiNDKiLLER SYSTEMS «·-
@@ -20,5 +19,4 @@
 [5C.
 
                Y o u r  F u t u r e  i s  i n  O u r  P a s t !
-
 [0m[1p

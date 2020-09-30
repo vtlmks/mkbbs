@@ -113,10 +113,7 @@ char *telopts[NTELOPTS+1] = {
 
 uint64_t telnet_state;
 
-
 char buffer[4096];
-
-
 
 static void send_option(SOCKET sock, int command, int option) {
 	unsigned char b[3];
@@ -146,7 +143,7 @@ static DWORD receive_cmds(LPVOID lpParam) {
 	int res;						// for error checking
 
 	char ask_ttype[] = {
-		IAC,SB,TTYPE,SEND,IAC,SE,
+		IAC,SB,TELOPT_NAWS,0,80,0,29,IAC,SE,
 	};
 
 	send_option(sock, WILL, TELOPT_ECHO);
@@ -175,6 +172,7 @@ static DWORD receive_cmds(LPVOID lpParam) {
 					telnet_state = (c == CR) ? SEEN_CR : TOP_LEVEL;
 				}
 				printf("%c", c);
+				send(sock, buf, 1, 0);
 
 			} break;
 			case SEEN_IAC: {
@@ -192,6 +190,7 @@ static DWORD receive_cmds(LPVOID lpParam) {
 					telnet_state = TOP_LEVEL;
 				} else {
 					printf("%c", c);
+					send(sock, buf, 1, 0);
 					telnet_state = TOP_LEVEL;
 				}
 			} break;
