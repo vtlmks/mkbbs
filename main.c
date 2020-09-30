@@ -114,6 +114,9 @@ char *telopts[NTELOPTS+1] = {
 uint64_t telnet_state;
 
 
+char buffer[4096];
+
+
 
 static void send_option(SOCKET sock, int command, int option) {
 	unsigned char b[3];
@@ -122,6 +125,17 @@ static void send_option(SOCKET sock, int command, int option) {
 	b[1] = command;
 	b[2] = option;
 	send(sock, b, 3, 0);
+}
+
+static void display_file(char *filename, SOCKET sock) {
+	FILE *f = fopen("ansi-texts\\AwaitScreen.txt", "rb");
+	fseek(f, 0, SEEK_END);
+	int filesize = ftell(f);
+	fseek(f, 0, SEEK_SET);
+	fread(buffer, filesize, 1, f);
+	fclose(f);
+
+	send(sock, buffer, filesize, 0);
 }
 
 static DWORD receive_cmds(LPVOID lpParam) {
@@ -139,6 +153,8 @@ static DWORD receive_cmds(LPVOID lpParam) {
 	send_option(sock, WILL, TELOPT_SGA);
 	send_option(sock, WONT, TELOPT_LINEMODE);
 	send(sock, ask_ttype, sizeof(ask_ttype), 0);
+
+	display_file("ansi-texts\\AwaitScreen.txt", sock);
 
 	while(1) {
 		res = recv(sock, buf, 1, 0); // recv cmds
