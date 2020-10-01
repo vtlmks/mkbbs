@@ -65,7 +65,11 @@ enum {
 #define LF 10
 #define NUL 0
 
-uint64_t telnet_state;
+uint64_t telnet_state;	// TODO(peter): add to node-state
+
+sqlite3 *db;
+sqlite3_stmt *res;
+
 
 char main_line[] = "[0 p[44;36m Future Entrance  #2  [0m [34m-[35m«[36m([0mAmiga Elite [36m)[35m»[34m- [36m([33m01:22  [0mmins. left[36m)[34m: [0m[1 p¤";
 
@@ -236,6 +240,33 @@ int main() {
 	if(ret != 0) {
 		return 0;
 	}
+
+	int rc = sqlite3_open(":memory:", &db);
+	if (rc != SQLITE_OK) {
+		fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+		sqlite3_close(db);
+       
+		return 1;
+	}
+    
+	rc = sqlite3_prepare_v2(db, "SELECT SQLITE_VERSION()", -1, &res, 0);    
+    
+	if (rc != SQLITE_OK) {
+        
+		fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+		sqlite3_close(db);
+        
+		return 1;
+	}    
+    
+	rc = sqlite3_step(res);
+    
+	if (rc == SQLITE_ROW) {
+		printf("%s\n", sqlite3_column_text(res, 0));
+	}
+    
+	sqlite3_finalize(res);
+	sqlite3_close(db);
 
 	server.sin_family = AF_INET;
 	server.sin_addr.s_addr = INADDR_ANY;
