@@ -14,8 +14,6 @@ jA!_/____/// `:::.::::. .  /____/   _/____/    /____/     /____/e^d _/____///
 
 * - [ BUGS --------------------------------------------------------------------
 
- - When connecting, we don't exit the statemachine correctly, so first character
-   from the client side is missing.
 
 * - [ TODO --------------------------------------------------------------------
 

@@ -55,6 +55,7 @@ enum {
 	SEEN_DO,
 	SEEN_DONT,
 	SEEN_SB,
+	SEEN_SE,
 	SEEN_CR,
 	SUBNEG_OT,
 	SUBNEG_IAC,
@@ -139,46 +140,67 @@ static DWORD receive_cmds(LPVOID lpParam) {
 			case SEEN_IAC: {
 				if(c == DO) {
 					telnet_state = SEEN_DO;
+
 				} else if(c == DONT) {
 					telnet_state = SEEN_DONT;
+
 				} else if(c == WILL) {
 					telnet_state = SEEN_WILL;
+
 				} else if(c == WONT) {
 					telnet_state = SEEN_WONT;
+
 				} else if(c == SB) {
 					telnet_state = SEEN_SB;
+
+				} else if(c == SE) {
+					telnet_state = SEEN_SE;
+
 				} else if(c == DM) {
 					telnet_state = TOP_LEVEL;
+
 				} else {
 					printf("%c", c);
 					send(sock, buf, 1, 0);
 					telnet_state = TOP_LEVEL;
 				}
 			} break;
+
 			case SEEN_WILL: {
-				printf("WILL %s\n", telopts[c]);
+				printf("WILL %s\n", TELOPT(c));
 				telnet_state = TOP_LEVEL;
 			} break;
+
 			case SEEN_WONT: {
-				printf("WONT %s\n", telopts[c]);
+				printf("WONT %s\n", TELOPT(c));
 				telnet_state = TOP_LEVEL;
 			} break;
+
 			case SEEN_DO: {
-				printf("DO %s\n", telopts[c]);
+				printf("DO %s\n", TELOPT(c));
 				telnet_state = TOP_LEVEL;
 			} break;
+
 			case SEEN_DONT: {
-				printf("DONT %s\n", telopts[c]);
+				printf("DONT %s\n", TELOPT(c));
 				telnet_state = TOP_LEVEL;
 			} break;
+
 			case SEEN_SB: {
-				printf("SB %s\n", telopts[c]);
+				printf("SB %s\n", TELOPT(c));
 				telnet_state = TOP_LEVEL;
 			} break;
+
+			case SEEN_SE: {
+				printf("SB %s\n", TELOPT(c));
+				telnet_state = TOP_LEVEL;
+			} break;
+
 			case SUBNEG_OT: {
 				printf("OT\n");
 				telnet_state = TOP_LEVEL;
 			} break;
+
 			case SUBNEG_IAC: {
 				printf("IAC\n");
 				telnet_state = TOP_LEVEL;
