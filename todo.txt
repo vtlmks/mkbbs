@@ -12,14 +12,22 @@ jA!_/____/// `:::.::::. .  /____/   _/____/    /____/     /____/e^d _/____///
                   .
 
 
+* - [ BUGS --------------------------------------------------------------------
+
+ - When connecting, we don't exit the statemachine correctly, so first character
+   from the client side is missing.
+
 * - [ TODO --------------------------------------------------------------------
 
- - command line parser
- - non blocking networking (select?)
+ - Set up fd_set(...) to listen for client_socket
+ - Change to select(...); with a timeout to process data at certain intervals,
+   like if the sysop wants to chat, or we need to kick the user on timeout et.c
 
- - configfile(s)
- - gui for config?
- - 
+ - Command line parser
+ - Non blocking networking (select?)
+
+ - Configfile(s)
+ - Gui for config?
 
 
 * - [ miscellaneous -----------------------------------------------------------

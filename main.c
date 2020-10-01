@@ -66,7 +66,7 @@ enum {
 
 uint64_t telnet_state;
 
-char main_line[] = "[0 p[44;36m ~SERVERNAME  #~NODE  [0m [34m-[35m«[36m([0m~CONF [36m)[35m»[34m- [36m([33m~USERTIMELH :~USERTIMELM  [0mmins. left[36m)[34m: [0m[1 p¤";
+char main_line[] = "[0 p[44;36m Future Entrance  #2  [0m [34m-[35m«[36m([0mAmiga Elite [36m)[35m»[34m- [36m([33m01:22  [0mmins. left[36m)[34m: [0m[1 p¤";
 
 char buffer[4096];
 
@@ -102,15 +102,20 @@ static DWORD receive_cmds(LPVOID lpParam) {
 
 	send_option(sock, WILL, TELOPT_ECHO);
 	send_option(sock, WILL, TELOPT_SGA);
-	send_option(sock, WONT, TELOPT_LINEMODE);
+//	send_option(sock, WONT, TELOPT_LINEMODE);
+	send_option(sock, DONT, TELOPT_LINEMODE);
 	send(sock, ask_ttype, sizeof(ask_ttype), 0);
 
 	display_file("ansi-texts\\AwaitScreen.txt", sock);
 
 	send(sock, main_line, sizeof(main_line), 0);
 
+// TODO(peter): Set up fd_set(...) to listen for client_socket
+
 	while(1) {
 		res = recv(sock, buf, 1, 0); // recv cmds
+// TODO(peter): Change to select(...); with a timeout to process data at certain intervals, like if the sysop wants to chat, or we need to kick the user on timeout et.c
+
 
 		if(res == 0) break;	// disconnect
 
