@@ -97,28 +97,41 @@ static DWORD receive_cmds(LPVOID lpParam) {
 	//char sendData[100];		// buffer to hold our sent data
 	int res;						// for error checking
 
-	char ask_ttype[] = {
-		IAC,SB,TELOPT_NAWS,0,80,0,29,IAC,SE,
-	};
+	//char ask_ttype[] = {
+	//	IAC,SB,TELOPT_NAWS,0,80,0,29,IAC,SE,
+	//};
 
 	send_option(sock, WILL, TELOPT_ECHO);
 	send_option(sock, WILL, TELOPT_SGA);
 //	send_option(sock, WONT, TELOPT_LINEMODE);
 	send_option(sock, DONT, TELOPT_LINEMODE);
-	send(sock, ask_ttype, sizeof(ask_ttype), 0);
+	//send(sock, ask_ttype, sizeof(ask_ttype), 0);
 
 	display_file("ansi-texts\\AwaitScreen.txt", sock);
 
 	send(sock, main_line, sizeof(main_line), 0);
 
 // TODO(peter): Set up fd_set(...) to listen for client_socket
+	struct fd_set sock_fd;
+
+	char buf2[] = {'.'};
+	struct timeval timeout = {0};
 
 	while(1) {
-		res = recv(sock, buf, 1, 0); // recv cmds
-// TODO(peter): Change to select(...); with a timeout to process data at certain intervals, like if the sysop wants to chat, or we need to kick the user on timeout et.c
+		timeout.tv_sec = 1;
+		timeout.tv_usec = 0;
 
+		FD_ZERO(&sock_fd);
+		FD_SET(sock, &sock_fd);
 
-		if(res == 0) break;	// disconnect
+		res = select(0, &sock_fd, 0, 0, &timeout);
+		if(res < 0) break;	// disconnect
+		if(res == 0) {
+			send(sock, buf2, 1, 0);
+			continue;
+		}
+
+		recv(sock, buf, 1, 0); // recv cmds
 
 		int c = (unsigned char)*buf;
 
