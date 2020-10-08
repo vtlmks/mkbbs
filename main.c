@@ -14,12 +14,20 @@
 
 #define _CRT_SECURE_NO_DEPRECATE
 
+#pragma comment(lib, "sdl2.lib")
+#pragma comment(lib, "sdl2main.lib")
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "sqlite3.lib")
+
 #include <winsock2.h>
 #include <Ws2def.h>
 #include <windows.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+
+#include <sdl.h>
+//#undef main
 
 typedef uint8_t u8;
 typedef uint16_t u16;
@@ -38,10 +46,6 @@ typedef u64 bool;
 
 #define true 1
 #define false 0
-
-
-#pragma comment(lib, "ws2_32.lib")
-#pragma comment(lib, "sqlite3.lib")
 
 #define TELOPTS
 #include "telnet.h"
@@ -218,7 +222,16 @@ static DWORD receive_cmds(LPVOID lpParam) {
 	return 0;
 }
 
-int main() {
+// TODO(peter): Move these to the node/server structure, as we want a window per node
+SDL_Window *window;
+SDL_Renderer *renderer;
+
+int main(int argc, char* argv[]) {
+
+	SDL_Init(SDL_INIT_EVERYTHING);
+	window = SDL_CreateWindow("wee", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 512, 0);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
 	SOCKET sock;
 
 	DWORD thread;
@@ -234,7 +247,7 @@ int main() {
 
 	int rc = sqlite3_open(":memory:", &db);
 	if (rc != SQLITE_OK) {
-		fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+//		fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
 		sqlite3_close(db);
        
 		return 1;
@@ -244,7 +257,7 @@ int main() {
     
 	if (rc != SQLITE_OK) {
         
-		fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+//		fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
 		sqlite3_close(db);
         
 		return 1;
@@ -253,7 +266,7 @@ int main() {
 	rc = sqlite3_step(res);
     
 	if (rc == SQLITE_ROW) {
-		printf("%s\n", sqlite3_column_text(res, 0));
+//		printf("%s\n", sqlite3_column_text(res, 0));
 	}
     
 	sqlite3_finalize(res);
@@ -284,7 +297,7 @@ int main() {
 
 	while(1) {
 		client = accept(sock, (SOCKADDR *)&from, &fromlen);
-		printf("Client connected\n");
+//		printf("Client connected\n");
 
 		CreateThread(0, 0, receive_cmds, (LPVOID)client, 0, &thread);
 	}

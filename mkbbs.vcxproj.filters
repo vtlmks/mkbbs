@@ -293,5 +293,6 @@
   <ItemGroup>
     <Library Include="sqlite3.lib" />
     <Library Include="SDL2.lib" />
+    <Library Include="SDL2main.lib" />
   </ItemGroup>
 </Project>
