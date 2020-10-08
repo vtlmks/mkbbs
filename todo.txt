@@ -14,22 +14,57 @@ jA!_/____/// `:::.::::. .  /____/   _/____/    /____/     /____/e^d _/____///
 
 * - [ BUGS --------------------------------------------------------------------
 
-
+ - None... ever..
+ 
 * - [ TODO --------------------------------------------------------------------
 
- - Set up fd_set(...) to listen for client_socket
- - Change to select(...); with a timeout to process data at certain intervals,
-   like if the sysop wants to chat, or we need to kick the user on timeout et.c
+ - own window rendering for server. SDL
+
+ - rewrite socket handling
 
  - Command line parser
- - Non blocking networking (select?)
 
  - Configfile(s)
+
  - Gui for config?
+
+ - stringconfig
+
+ - database - ...
+
+ - External doors (DLL)
+
+
 
 
 * - [ miscellaneous -----------------------------------------------------------
 
+
+
+
+~prompt
+
+
+
+
+
+
+
+
+
+dllexport int a() { };
+
+
+fis  = loaddll();
+
+int a();
+
+
+
+findProcAddress(fis, "a");
+
+
+	a(..);
 
 
 

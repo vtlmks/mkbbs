@@ -129,7 +129,10 @@ static DWORD receive_cmds(LPVOID lpParam) {
 		FD_SET(sock, &sock_fd);
 
 		res = select(0, &sock_fd, 0, 0, &timeout);
-		if(res < 0) break;	// disconnect
+// TODO(peter): we are not checking if client disconnects, got to look that up!
+		if(res < 0) {
+			break;	// disconnect
+		}
 		if(res == 0) {
 			send(sock, buf2, 1, 0);
 			continue;
@@ -155,31 +158,19 @@ static DWORD receive_cmds(LPVOID lpParam) {
 
 			} break;
 			case SEEN_IAC: {
-				if(c == DO) {
-					telnet_state = SEEN_DO;
-
-				} else if(c == DONT) {
-					telnet_state = SEEN_DONT;
-
-				} else if(c == WILL) {
-					telnet_state = SEEN_WILL;
-
-				} else if(c == WONT) {
-					telnet_state = SEEN_WONT;
-
-				} else if(c == SB) {
-					telnet_state = SEEN_SB;
-
-				} else if(c == SE) {
-					telnet_state = SEEN_SE;
-
-				} else if(c == DM) {
-					telnet_state = TOP_LEVEL;
-
-				} else {
-					printf("%c", c);
-					send(sock, buf, 1, 0);
-					telnet_state = TOP_LEVEL;
+				switch(c) {
+					case DO:		{ telnet_state = SEEN_DO;		} break;
+					case DONT:	{ telnet_state = SEEN_DONT;	} break;
+					case WILL:	{ telnet_state = SEEN_WILL;	} break;
+					case WONT:	{ telnet_state = SEEN_WONT;	} break;
+					case SB:		{ telnet_state = SEEN_SB;		} break;
+					case SE:		{ telnet_state = SEEN_SE;		} break;
+					case DM:		{ telnet_state = TOP_LEVEL;	} break;
+					default: {
+						printf("%c", c);
+						send(sock, buf, 1, 0);
+						telnet_state = TOP_LEVEL;
+					} break;
 				}
 			} break;
 
